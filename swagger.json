@@ -128,6 +128,145 @@
 					}
 				}
 			}
+		},
+		"/products/{product_id}/reviews": {
+			"parameters": [
+				{
+					"in": "path",
+					"name": "product_id",
+					"required": true,
+					"schema": {
+						"type": "integer"
+					}
+				}
+			],
+			"get": {
+				"parameters": [
+					{
+						"in": "query",
+						"name": "sort",
+						"schema": {
+							"type": "string",
+							"enum": ["date", "votes", "rating"]
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/Review"
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Not found"
+					}
+				}
+			},
+			"post": {
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/Review"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Review"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Invalid input"
+					}
+				}
+			}
+		},
+		"/products/{product_id}/reviews/{review_id}": {
+			"parameters": [
+				{
+					"in": "path",
+					"name": "product_id",
+					"required": true,
+					"schema": {
+						"type": "integer"
+					}
+				},
+				{
+					"in": "path",
+					"name": "review_id",
+					"required": true,
+					"schema": {
+						"type": "integer"
+					}
+				}
+			],
+			"get": {
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Review"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Not found"
+					}
+				}
+			},
+			"put": {
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/Review"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"204": {
+						"description": "Updated successfully"
+					},
+					"400": {
+						"description": "Invalid input"
+					},
+					"404": {
+						"description": "Not found"
+					}
+				}
+			},
+			"delete": {
+				"responses": {
+					"204": {
+						"description": "Deleted successfully"
+					},
+					"404": {
+						"description": "Not found"
+					}
+				}
+			}
 		}
 	},
 	"components": {
@@ -163,6 +302,42 @@
 					"product_date": {
 						"type": "string",
 						"example": "2020-01-01",
+						"readOnly": true
+					}
+				}
+			},
+			"Review": {
+				"properties": {
+					"id": {
+						"type": "integer",
+						"example": 1,
+						"readOnly": true
+					},
+					"title": {
+						"type": "string",
+						"example": "This product is noice."
+					},
+					"review_text": {
+						"type": "string",
+						"example": "The product works as intended"
+					},
+					"rating": {
+						"type": "integer",
+						"example": 5
+					},
+					"review_date": {
+						"type": "string",
+						"example": "2020-01-01",
+						"readOnly": true
+					},
+					"helpful_votes": {
+						"type": "integer",
+						"example": 30,
+						"readOnly": true
+					},
+					"product_id": {
+						"type": "integer",
+						"example": 1,
 						"readOnly": true
 					}
 				}
