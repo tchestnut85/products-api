@@ -95,44 +95,14 @@ router.post('/:id/reviews', async (req, res) => {
 	}
 });
 
-router.get('/:product_id/reviews/:review_id', async (req, res) => {
+router.patch('/:id', async ({ body, params }, res) => {
 	try {
-		const { rows, rowCount } = await Review.getOne({
-			id: req.params.review_id,
+		const { rowCount } = Product.updateQuantity({
+			id: params.id,
+			quantity: body.quantity,
 		});
 
-		if (rowCount > 0) {
-			res.status(200).json(rows[0]);
-		} else {
-			res.status(404).end();
-		}
-	} catch (err) {
-		console.error(err);
-		res.status(500).end();
-	}
-});
-
-router.put('/:product_id/reviews/:review_id', async (req, res) => {
-	try {
-		const { rowCount } = await Review.update({
-			id: req.params.review_id,
-			...req.body,
-		});
-
-		res.status(rowCount === 0 ? 404 : 204).end();
-	} catch (err) {
-		console.error(err);
-		res.status(err.table ? 400 : 500).end();
-	}
-});
-
-router.delete('/:product_id/reviews/:review_id', async (req, res) => {
-	try {
-		const { rowCount } = await Review.delete({
-			id: req.params.review_id,
-		});
-
-		res.status(rowCount === 0 ? 404 : 204).end();
+		res.status(rowCount ? 204 : 404);
 	} catch (err) {
 		console.error(err);
 		res.status(500).end();

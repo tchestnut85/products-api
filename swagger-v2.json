@@ -363,14 +363,16 @@
 			}
 		},
 		"/categories/{category_id}": {
-			"parameters": {
-				"in": "path",
-				"name": "category_id",
-				"required": true,
-				"schema": {
-					"type": "integer"
+			"parameters": [
+				{
+					"in": "path",
+					"name": "category_id",
+					"required": true,
+					"schema": {
+						"type": "integer"
+					}
 				}
-			},
+			],
 			"get": {
 				"tags": ["categories"],
 				"responses": {
