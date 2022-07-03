@@ -5,7 +5,14 @@ router.get('/', async (req, res) => {
 	try {
 		const { rows } = await Product.getAll(req.query);
 
-		res.status(200).json(rows);
+		const stockedRows = rows.map(row => {
+			return {
+				...row,
+				stock: row.quantity,
+			};
+		});
+
+		res.status(200).json(stockedRows);
 	} catch (err) {
 		console.error(err);
 		res.status(500).end();
@@ -14,7 +21,10 @@ router.get('/', async (req, res) => {
 
 router.post('/', async (req, res) => {
 	try {
-		const { rows } = await Product.create(req.body);
+		const { rows } = await Product.create({
+			...req.body,
+			quantity: req.body.stock,
+		});
 
 		res.status(200).json(rows[0]);
 	} catch (err) {
@@ -30,7 +40,10 @@ router.get('/:id', async (req, res) => {
 		});
 
 		if (rowCount > 0) {
-			res.status(200).json(rows[0]);
+			res.status(200).json({
+				...rows[0],
+				stock: rows[0].quantity,
+			});
 		} else {
 			res.status(404).end();
 		}
@@ -45,6 +58,7 @@ router.put('/:id', async (req, res) => {
 		const { rowCount } = await Product.update({
 			id: req.params.id,
 			...req.body,
+			quantity: req.body.stock,
 		});
 
 		res.status(rowCount === 0 ? 404 : 204).end();
