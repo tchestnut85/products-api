@@ -1,10 +1,17 @@
 const db = require('../config/connection');
 
 class Product {
-	getAll({ category, sort }) {
-		let orderBy = 'ORDER BY ';
+	constructor() {
+		this.offset = 10;
+	}
 
+	getAll({ category, sort, page }) {
+		let orderBy = 'ORDER BY ';
 		let where = category ? `WHERE category_id = ${parseInt(category)}` : '';
+
+		let offset = page
+			? `OFFSET ${this.offset * page - this.offset} LIMIT ${this.offset + 1}`
+			: '';
 
 		switch (sort) {
 			case 'date':
@@ -26,7 +33,7 @@ class Product {
       FROM products
       LEFT JOIN reviews ON products.id = reviews.product_id
       ${where}
-      GROUP BY (products.id) ${orderBy}`;
+      GROUP BY (products.id) ${orderBy} ${offset}`;
 
 		return db.query(query);
 	}
